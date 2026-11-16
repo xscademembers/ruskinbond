@@ -1,57 +1,69 @@
+import { useRef } from 'react'
+import { useMotion } from '../lib/motion'
+import Words from './Words'
+
+const details = [
+  { label: 'Email', value: 'officialruskinbond@gmail.com', href: 'mailto:officialruskinbond@gmail.com' },
+  { label: 'Phone', value: '+91 83769 31264', href: 'tel:+918376931264' },
+  { label: 'Location', value: 'Mussoorie, Uttarakhand, India' },
+  { label: 'Instagram', value: '@ruskinbondfoundation', href: 'https://www.instagram.com/ruskinbondfoundation', external: true },
+]
+
 export default function Contact() {
+  const ref = useRef(null)
+  useMotion(ref)
+
   return (
-    <section className="section contact" id="contact">
+    <section className="section contact" id="contact" ref={ref}>
       <div className="wrap contact-grid">
         <div>
-          <p className="eyebrow reveal">Get in touch</p>
-          <h2 className="reveal">Volunteer, partner or just say hello</h2>
-          <address className="reveal">
-            <p>
-              <strong>Email</strong>
-              <a href="mailto:officialruskinbond@gmail.com">
-                officialruskinbond@gmail.com
-              </a>
-            </p>
-            <p>
-              <strong>Phone</strong>
-              <a href="tel:+918376931264">+91 83769 31264</a>
-            </p>
-            <p>
-              <strong>Location</strong>
-              Mussoorie, Uttarakhand, India
-            </p>
-            <p>
-              <strong>Instagram</strong>
-              <a
-                href="https://www.instagram.com/ruskinbondfoundation"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                @ruskinbondfoundation
-              </a>
-            </p>
-          </address>
+          <p className="eyebrow" data-fade>Get in touch</p>
+          <h2 className="h2" data-split>
+            <Words text="Volunteer, partner or just say hello" em={['hello']} />
+          </h2>
+          <dl className="contact-list">
+            {details.map((d, i) => (
+              <div key={d.label} data-fade={i * 0.06}>
+                <i data-line aria-hidden="true" />
+                <dt>{d.label}</dt>
+                <dd>
+                  {d.href ? (
+                    <a
+                      className="link"
+                      href={d.href}
+                      {...(d.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    >
+                      {d.value}
+                    </a>
+                  ) : (
+                    d.value
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
         <form
-          className="form reveal"
+          className="form"
           action="mailto:officialruskinbond@gmail.com"
           method="post"
           encType="text/plain"
+          data-fade="0.15"
         >
-          <label>
-            Your name
-            <input name="name" type="text" required autoComplete="name" />
+          <label className="field">
+            <input name="name" type="text" required autoComplete="name" placeholder=" " />
+            <span>Your name</span>
           </label>
-          <label>
-            Your email
-            <input name="email" type="email" required autoComplete="email" />
+          <label className="field">
+            <input name="email" type="email" required autoComplete="email" placeholder=" " />
+            <span>Your email</span>
           </label>
-          <label>
-            Message
-            <textarea name="message" rows="5" required />
+          <label className="field">
+            <textarea name="message" rows="4" required placeholder=" " />
+            <span>Message</span>
           </label>
-          <button className="btn btn-dark" type="submit">
-            Send message
+          <button className="btn btn-dark" type="submit" data-magnetic>
+            <span>Send message</span>
           </button>
           <p className="form-note">
             Messages are sent by email. You can also write to
