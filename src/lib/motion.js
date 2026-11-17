@@ -15,13 +15,25 @@ let lenis = null
 
 export function startSmooth() {
   if (prefersReduced) return () => {}
-  lenis = new Lenis({ lerp: 0.14, wheelMultiplier: 1 })
+  if (lenis) return () => {}
+
+  lenis = new Lenis({
+    lerp: 0.08,
+    smoothWheel: true,
+    wheelMultiplier: 0.9,
+    touchMultiplier: 1.2,
+    syncTouch: false,
+  })
   lenis.on('scroll', ScrollTrigger.update)
+
   const tick = (time) => lenis?.raf(time * 1000)
   gsap.ticker.add(tick)
   gsap.ticker.lagSmoothing(0)
+  document.documentElement.classList.add('lenis', 'lenis-smooth')
+
   return () => {
     gsap.ticker.remove(tick)
+    document.documentElement.classList.remove('lenis', 'lenis-smooth')
     lenis?.destroy()
     lenis = null
   }
@@ -31,7 +43,13 @@ export function scrollToTarget(target) {
   const el = target === '#top' ? 0 : document.querySelector(target)
   if (el === null) return
   if (lenis) {
-    lenis.scrollTo(el, { duration: 1.8, easing: (t) => 1 - Math.pow(1 - t, 4), force: true })
+    lenis.scrollTo(el, {
+      offset: 0,
+      duration: 1.6,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      force: true,
+      lock: true,
+    })
   } else if (el === 0) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } else {
